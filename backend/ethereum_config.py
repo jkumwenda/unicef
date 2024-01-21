@@ -6,7 +6,7 @@ from web3 import Web3
 ethereum_node_url = "http://127.0.0.1:7545"
 
 # Contract details
-contract_address = "0x4c5716c57472d5FA937fBE71BD226Db93D8fE4C3"  # Replace with your deployed contract address
+contract_address = "0x1aFfe7fb447D37578C1Dd3df305989b1F5198A23"  # Replace with your deployed contract address
 contract_abi = [
     {
         "inputs": [],

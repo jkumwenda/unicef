@@ -1,11 +1,9 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends
 from schemas.schemas import DonationSchema
-from models import Donation, Organisation
+from models import Donation
 from database import get_db
-from sqlalchemy.orm import joinedload
-from sqlalchemy import or_
-from typing import Annotated
+from ethereum_config import contract_abi, w3, contract_address
 from web3 import Web3
 
 
@@ -13,86 +11,9 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
-contract_address = "0x1aFfe7fb447D37578C1Dd3df305989b1F5198A23"  # Replace with your deployed contract address
-# contract_address = "0x4c5716c57472d5FA937fBE71BD226Db93D8fE4C3"  # Replace with your deployed contract address
-contract_abi = [
-    {
-        "inputs": [],
-        "name": "donate",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-    },
-    {
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "donor",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256",
-            },
-        ],
-        "name": "DonationMade",
-        "type": "event",
-    },
-    {
-        "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "name": "allDonations",
-        "outputs": [
-            {"internalType": "address", "name": "donor", "type": "address"},
-            {"internalType": "uint256", "name": "amount", "type": "uint256"},
-            {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "donationCount",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [],
-        "name": "getAllDonations",
-        "outputs": [
-            {
-                "components": [
-                    {"internalType": "address", "name": "donor", "type": "address"},
-                    {"internalType": "uint256", "name": "amount", "type": "uint256"},
-                    {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
-                ],
-                "internalType": "struct DonationContract.Donation[]",
-                "name": "",
-                "type": "tuple[]",
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-    },
-    {
-        "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-        "name": "senderAddress",
-        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function",
-    },
-]
+w3 = w3
+contract_address = contract_address
+contract_abi = contract_abi
 
 
 def get_web3():
